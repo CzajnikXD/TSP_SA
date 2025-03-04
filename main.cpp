@@ -12,11 +12,13 @@ int *new_permutation;
 int *rand_permutation;
 int *best_permutation;
 int *permutation;
+random_device rd;
+mt19937 gen(rd());
 
 int current_cost = 2147483647;
 int best_cost = 2147483647;
 int nodes, edges, x, y, z, test_a, test_b;
-double T = 1000;
+double T = 100000;
 
 int calculate_cost(int* perm, int nodes)
 {
@@ -28,8 +30,6 @@ int calculate_cost(int* perm, int nodes)
 }
 
 void swap_random(int *perm, int nodes) {
-    random_device rd;
-    mt19937 gen(rd());
     uniform_int_distribution<int> start_dist(0, nodes-1);
     uniform_int_distribution<int> end_dist(1, nodes-1);
 
@@ -41,7 +41,7 @@ void swap_random(int *perm, int nodes) {
     int end_j = end_dist(gen);
     if (end_i>end_j) swap(end_i, end_j);
 
-    if(T>0.1) {
+    if(T>0.001) {
         if (start_i == 0) {
             swap(perm[start_i], perm[start_j]);
             perm[nodes] = perm[0];
@@ -57,9 +57,7 @@ void swap_random(int *perm, int nodes) {
 
 bool is_valid_cycle(int *perm, int nodes, bool **neighbours) {
     for (int i = 0; i < nodes; i++) {
-        if (!neighbours[perm[i]][perm[i + 1]]) {
-            return false;  // If any edge is missing, return false immediately
-        }
+        if (!neighbours[perm[i]][perm[i + 1]]) return false;  // If any edge is missing, return false immediately
     }
     return true;  // All edges exist, it's a valid cycle
 }
@@ -91,7 +89,8 @@ int main() {
     // Data loading
     for(int i = 0; i < edges; i++){
         cin >> x >> y >> z;
-        neighbours[x][y] = neighbours[y][x] = true; // Connection between edges x-y is present, so the bool is true
+        neighbours[x][y] = true; // Connection between edges x-y is present, so the bool is true
+        neighbours[y][x] = true;
         weights[x][y] = weights[y][x] = z; // Weights between x-y is set to z
     }
 
@@ -102,8 +101,6 @@ int main() {
         }
 
         // Randomly shuffling a permutation
-        random_device rd;
-        mt19937 gen(rd());
         shuffle(rand_permutation, rand_permutation + nodes, gen);
 
         // Filling the table with correctly prepared random permutation
