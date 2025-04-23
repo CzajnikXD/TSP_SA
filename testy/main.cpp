@@ -111,8 +111,8 @@ int run_SA(double T_start, double cooling_rate, int verbose = 0) {
 
 void run_tests() {
     const int TESTS = 30;
-    double T_start_values[] = {100000, 50000, 10000};
-    double cooling_rates[] = {0.99, 0.95, 0.9};
+    double T_start_values[] = {100000, 75000, 50000, 25000, 10000};
+    double cooling_rates[] = {0.999, 0.995, 0.99, 0.95, 0.9};
 
     char current_path[MAX_PATH];
     GetCurrentDirectory(MAX_PATH, current_path);
