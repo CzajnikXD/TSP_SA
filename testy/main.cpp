@@ -117,7 +117,11 @@ void run_tests() {
     char current_path[MAX_PATH];
     GetCurrentDirectory(MAX_PATH, current_path);
 
-    string file_path = string(current_path) + "/SA_results.csv";
+    string current_path_str(current_path);
+    size_t pos = current_path_str.find_last_of("\\/");
+    string parent_path = current_path_str.substr(0, pos);
+
+    string file_path = parent_path + "\\SA_results.csv";
 
     ofstream test_results(file_path);
     test_results << "T_start,cooling_rate,average_cost,average_time_ms\n";
